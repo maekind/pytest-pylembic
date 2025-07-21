@@ -1,0 +1,53 @@
+[project]
+name = "pytest-pylembic"
+version = "0.1.0"
+description = "This package provides pytest plugin for validating Alembic migrations using the pylembic package."
+readme = "README.md"
+authors = [
+    { name = "Marco Espinosa", email = "marco@marcoespinosa.com" },
+]
+license = { file = "LICENSE" }
+requires-python = ">=3.11"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Framework :: Pytest",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Testing",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Operating System :: OS Independent",
+    "License :: OSI Approved :: MIT License",
+]
+dependencies = [
+    "pylembic>=0.7.0"
+]
+
+[project.entry-points.pytest11]
+pylembic = "pytest_pylembic.plugin"
+
+[tool.uv]
+dev-dependencies = [
+    "pytest-cov==6.2.1",
+    "pytest-mock==3.14.1",
+    "pytest==8.4.1",
+    "ruff==0.12.4",
+    "pre-commit==4.2.0",
+]
+
+[tool.ruff]
+line-length = 88
+lint.select = ["E", "F", "W"]
+
+[tool.hatch.build]
+sources = ["src"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+python_functions = "test_*"
