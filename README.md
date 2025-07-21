@@ -1,7 +1,6 @@
 <!-- Shields -->
 <p align="center">
 <a href="https://github.com/maekind/pytest-pylembic"><img src="https://img.shields.io/github/actions/workflow/status/maekind/pytest-pylembic/.github%2Fworkflows%2Ftesting.yaml?label=tests&color=green" hspace="5"></a>
-<a href="https://codecov.io/gh/maekind/pytest-pylembic"><img src="https://codecov.io/gh/maekind/pytest-pylembic/graph/badge.svg?token=JcGna50uJL" hspace="5"/></a>
 <a href="https://github.com/maekind/pytest-pylembic/releases"><img src="https://img.shields.io/github/actions/workflow/status/maekind/pytest-pylembic/.github%2Fworkflows%2Frelease.yaml?label=build%20package&color=green" hspace="5"></a>
 <a href="https://pypi.org/project/pytest-pylembic"><img src="https://img.shields.io/github/v/release/maekind/pytest-pylembic?color=blue&label=pypi" hspace="5"></a>
 <br>
