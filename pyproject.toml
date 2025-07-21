@@ -1,6 +1,6 @@
 [project]
 name = "pytest-pylembic"
-version = "0.1.0"
+version = "0.0.0"
 description = "This package provides pytest plugin for validating Alembic migrations using the pylembic package."
 readme = "README.md"
 authors = [
