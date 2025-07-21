@@ -1,3 +1,18 @@
+<!-- Shields -->
+<p align="center">
+<a href="https://github.com/maekind/pytest-pylembic"><img src="https://img.shields.io/github/actions/workflow/status/maekind/pytest-pylembic/.github%2Fworkflows%2Ftesting.yaml?label=tests&color=green" hspace="5"></a>
+<a href="https://codecov.io/gh/maekind/pytest-pylembic"><img src="https://codecov.io/gh/maekind/pytest-pylembic/graph/badge.svg?token=JcGna50uJL" hspace="5"/></a>
+<a href="https://github.com/maekind/pytest-pylembic/releases"><img src="https://img.shields.io/github/actions/workflow/status/maekind/pytest-pylembic/.github%2Fworkflows%2Frelease.yaml?label=build%20package&color=green" hspace="5"></a>
+<a href="https://pypi.org/project/pytest-pylembic"><img src="https://img.shields.io/github/v/release/maekind/pytest-pylembic?color=blue&label=pypi" hspace="5"></a>
+<br>
+<a href="https://github.com/maekind/pytest-pylembic/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-orange.svg" hspace="5"></a>
+<a href="https://github.com/maekind/pytest-pylembic"><img src="https://img.shields.io/github/repo-size/maekind/pytest-pylembic?color=red" hspace="5"></a>
+<a href="https://github.com/maekind/pytest-pylembic"><img src="https://img.shields.io/github/last-commit/maekind/pytest-pylembic?color=black" hspace="5"></a>
+<a href="https://www.python.org/downloads/"><img src="https://img.shields.io/github/languages/top/maekind/pytest-pylembic?color=darkgreen" hspace="5"></a>
+<a href="https://www.python.org/downloads/"><img src="https://img.shields.io/badge/python%20version-%3E3.11-lightblue" hspace="5"></a>
+</p>
+<!-- End of Shields -->
+
 # 🧪 pytest-pylembic
 
 A pytest plugin for validating Pylembic database migrations automatically.
@@ -26,10 +41,10 @@ Once installed, the plugin automatically runs migration validation when you exec
 You can customize the plugin's behavior with these pytest command line options:
 
 ```bash
-pytest --pylembic-migrations-dir=path/to/migrations  # Specify a custom migrations directory
-pytest --skip-pylembic                       # Skip migration validation
-pytest --pylembic-detect-branches=False              # Disable branch detection
-pytest --pylembic-verbose=False           # Disable verbose output
+pytest --alembic-migrations-dir=path/to/migrations  # Specify a custom migrations directory
+pytest --skip-pylembic                              # Skip migration validation
+pytest --pylembic-detect-branches=False             # Disable branch detection
+pytest --pylembic-verbose=False                     # Disable verbose output
 ```
 
 ### ⚙️ Configuration in pytest.ini
@@ -38,7 +53,7 @@ You can also configure these options in your `pytest.ini` file:
 
 ```ini
 [pytest]
-addopts = --pylembic-migrations-dir=pylembic_migrations
+addopts = --alembic-migrations-dir=alembic_migrations_dir --pylembic-detect-branches=False --pylembic-verbose
 ```
 
 ## 🔍 Examples
@@ -58,7 +73,7 @@ The plugin will automatically validate your migrations and report any issues.
 For a project with migrations in a non-standard location:
 
 ```bash
-pytest --pylembic-migrations-dir=database/migrations
+pytest --alembic-migrations-dir=database/migrations
 ```
 
 ## ⚡ How It Works
