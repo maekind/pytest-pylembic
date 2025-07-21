@@ -31,8 +31,8 @@ def pytest_addoption(parser: Parser) -> None:
     group.addoption(
         "--pylembic-verbose",
         action="store_true",
-        default=True,
-        help="Show verbose output for pylembic validation (default: True)",
+        default=False,
+        help="Show verbose output for pylembic validation (default: False)",
     )
 
 
@@ -92,15 +92,22 @@ def pytest_terminal_summary(
 
         pylembic_passed = 0
         for passed in tr.stats.get("passed", []):
-            if hasattr(passed, "name") and passed.name == "test_pylembic_migrations":
+            if (
+                hasattr(passed, "head_line")
+                and passed.head_line == "test_pylembic_migrations"
+            ):
                 pylembic_passed += 1
+                if hasattr(passed, "caplog"):
+                    tr.write_line(passed.caplog)
 
         if pylembic_passed:
-            tr.write_line("Migration validation successful!")
+            tr.write_line("Migrations validation successful!")
         else:
             for failed in tr.stats.get("failed", []):
                 if (
-                    hasattr(failed, "name")
-                    and failed.name == "test_pylembic_migrations"
+                    hasattr(failed, "head_line")
+                    and failed.head_line == "test_pylembic_migrations"
                 ):
-                    tr.write_line("Migration validation failed.")
+                    tr.write_line("Migrations validation failed.")
+                    if hasattr(failed, "caplog"):
+                        tr.write_line(failed.caplog)

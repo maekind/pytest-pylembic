@@ -29,7 +29,6 @@ pylembic = "pytest_pylembic.plugin"
 
 [tool.uv]
 dev-dependencies = [
-    "pytest-cov==6.2.1",
     "pytest-mock==3.14.1",
     "pytest==8.4.1",
     "ruff==0.12.4",

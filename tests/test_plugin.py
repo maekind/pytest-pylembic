@@ -79,7 +79,7 @@ def test_plugin_registration(testdir: Testdir):
     )
 
 
-def test_migration_validation(testdir: Testdir, mock_migrations_dir: Path):
+def test_migration_validation__verbose(testdir: Testdir, mock_migrations_dir: Path):
     """Test that the plugin correctly validates migrations."""
     # Create a temporary pytest test file
     testdir.makepyfile("""
@@ -91,7 +91,9 @@ def test_migration_validation(testdir: Testdir, mock_migrations_dir: Path):
     migrations_path = Path(mock_migrations_dir) / "migrations"
 
     # Run pytest with our plugin
-    result = testdir.runpytest(f"--alembic-migrations-dir={migrations_path}")
+    result = testdir.runpytest(
+        f"--alembic-migrations-dir={migrations_path}", "--pylembic-verbose"
+    )
 
     # The test collection should include our auto-generated test
     result.stdout.fnmatch_lines(
