@@ -90,6 +90,11 @@ def pytest_terminal_summary(
         tr = terminalreporter
         tr.write_sep("=", "Pylembic migrations validation summary")
 
+        if not config.getoption("--pylembic-verbose"):
+            tr.write_line(
+                "Enable verbose mode with --pylembic-verbose for more details."
+            )
+
         pylembic_passed = 0
         for passed in tr.stats.get("passed", []):
             if (
@@ -101,13 +106,15 @@ def pytest_terminal_summary(
                     tr.write_line(passed.caplog)
 
         if pylembic_passed:
-            tr.write_line("Migrations validation successful!")
+            tr.write_line("\n✨ Migrations validation successful ✨")
         else:
             for failed in tr.stats.get("failed", []):
                 if (
                     hasattr(failed, "head_line")
                     and failed.head_line == "test_pylembic_migrations"
                 ):
-                    tr.write_line("Migrations validation failed.")
+                    tr.write_line("\n❌ Migrations validation failed ❌")
                     if hasattr(failed, "caplog"):
                         tr.write_line(failed.caplog)
+
+        tr.write_sep("=", "End of Pylembic migrations validation summary")

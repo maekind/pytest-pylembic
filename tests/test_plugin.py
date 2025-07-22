@@ -62,6 +62,81 @@ def downgrade():
     shutil.rmtree(temp_dir)
 
 
+@fixture
+def mock_migrations_dir_multiple_heads():
+    """Create a temporary directory with mock migration files with failure case."""
+    temp_dir = tempfile.mkdtemp()
+    migrations_dir = Path(temp_dir) / "migrations"
+    migrations_dir.mkdir(exist_ok=True)
+
+    # Create versions directory
+    versions_dir = migrations_dir / "versions"
+    versions_dir.mkdir(exist_ok=True)
+
+    # Create basic alembic.ini
+    with open(migrations_dir / "alembic.ini", "w") as f:
+        f.write("[alembic]\nscript_location = migrations\n")
+
+    # Create env.py
+    with open(migrations_dir / "env.py", "w") as f:
+        f.write("# Mock env.py file for testing\n")
+
+    # Create two migration files with different heads (multiple heads)
+    with open(versions_dir / "1a2b3c4d5e6f_initial.py", "w") as f:
+        f.write("""
+\"\"\"Initial migration
+
+Revision ID: 1a2b3c4d5e6f
+Revises:
+Create Date: 2023-01-01 00:00:00.000000
+
+\"\"\"
+from alembic import op
+import sqlalchemy as sa
+
+# revision identifiers
+revision = '1a2b3c4d5e6f'
+down_revision = None
+branch_labels = None
+depends_on = None
+
+def upgrade():
+    pass
+
+def downgrade():
+    pass
+""")
+    with open(versions_dir / "2b3c4d5e6f7g_second_head.py", "w") as f:
+        f.write("""
+\"\"\"Second head
+
+Revision ID: 2b3c4d5e6f7g
+Revises:
+Create Date: 2023-01-02 00:00:00.000000
+
+\"\"\"
+from alembic import op
+import sqlalchemy as sa
+
+# revision identifiers
+revision = '2b3c4d5e6f7g'
+down_revision = None
+branch_labels = None
+depends_on = None
+
+def upgrade():
+    pass
+
+def downgrade():
+    pass
+""")
+
+    yield temp_dir
+
+    # Cleanup
+    shutil.rmtree(temp_dir)
+
+
 def test_plugin_registration(testdir: Testdir):
     """Test that the plugin is properly registered."""
     # Create a temporary pytest test file
@@ -97,7 +172,33 @@ def test_migration_validation__verbose(testdir: Testdir, mock_migrations_dir: Pa
 
     # The test collection should include our auto-generated test
     result.stdout.fnmatch_lines(
-        ["*collected*", "*=== Pylembic migrations validation summary ===*"]
+        [
+            "*collected*",
+            "*=== Pylembic migrations validation summary ===*",
+            "*✨ Migrations validation successful ✨*",
+        ]
+    )
+
+
+def test_failing_migration_multiple_heads(
+    testdir: Testdir, mock_migrations_dir_multiple_heads: Path
+):
+    """Test that the plugin detects multiple heads and fails validation."""
+    testdir.makepyfile("""
+        def test_dummy():
+            assert True
+    """)
+    migrations_path = Path(mock_migrations_dir_multiple_heads) / "migrations"
+    result = testdir.runpytest(
+        f"--alembic-migrations-dir={migrations_path}", "--pylembic-verbose"
+    )
+    # The dynamic test should fail and the summary should report failure
+    result.stdout.fnmatch_lines(
+        [
+            "*collected*",
+            "*=== Pylembic migrations validation summary ===*",
+            "*❌ Migrations validation failed ❌*",
+        ]
     )
 
 
