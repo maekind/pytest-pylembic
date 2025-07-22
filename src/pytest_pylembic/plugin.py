@@ -17,7 +17,7 @@ def pytest_addoption(parser: Parser) -> None:
         "--alembic-migrations-dir",
         action="store",
         default="migrations",
-        help="Path to the alembic's migrations directory (default: 'migrations')",
+        help="Path to the alembic's migrations directory. Default: 'migrations'",
     )
     group.addoption(
         "--skip-pylembic", action="store_true", help="Skip pylembic validation"
@@ -26,13 +26,13 @@ def pytest_addoption(parser: Parser) -> None:
         "--pylembic-detect-branches",
         action="store_true",
         default=True,
-        help="Detect migration branches (default: True)",
+        help="Detect migration branches. Default: True",
     )
     group.addoption(
         "--pylembic-verbose",
         action="store_true",
         default=False,
-        help="Show verbose output for pylembic validation (default: False)",
+        help="Show verbose output for pylembic validation. Default: False",
     )
 
 
