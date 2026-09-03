@@ -55,6 +55,15 @@ You can also configure these options in your `pytest.ini` file:
 addopts = --alembic-migrations-dir=alembic_migrations_dir --pylembic-detect-branches=False --pylembic-verbose
 ```
 
+## 🐍 Configuration in pyproject.toml
+
+You can also configure these options in your `pyproject.toml` file:
+
+```toml
+[tool.pytest.ini_options]
+addopts = "--alembic-migrations-dir=alembic_migrations_dir --pylembic-detect-branches=False --pylembic-verbose"
+```
+
 ## 🔍 Examples
 
 ### ▶️ Basic Usage
@@ -62,7 +71,36 @@ addopts = --alembic-migrations-dir=alembic_migrations_dir --pylembic-detect-bran
 Simply run pytest as usual:
 
 ```bash
-pytest
+addopts = --alembic-migrations-dir=alembic_migrations_dir --pylembic-detect-branches=False --pylembic-verbose
+```
+
+## 🔍 Examples
+
+### ▶️ Basic Usage
+
+Simply run pytest as usual:
+
+```bash
+> pytest
+
+===================================================================================================== test session starts ======================================================================================================
+platform darwin -- Python 3.14.0, pytest-9.1.1, pluggy-1.6.0
+rootdir: /whatever_is_your_root_project
+configfile: pyproject.toml
+plugins: pylembic-0.4.0
+collected 0 items                                                                                                                                                                                                              
+
+.venv/lib/python3.14/site-packages/pytest_pylembic/plugin.py .                                                                                                                                                           [100%]
+
+============================================================================================ Pylembic migrations validation summary ============================================================================================
+INFO     pylembic.logger:validator.py:158 No branching migrations detected.
+INFO     pylembic.logger:validator.py:95 Only one migration detected. Skipping orphan check.
+INFO     pylembic.logger:validator.py:125 No multiple bases or heads detected.
+
+✨ Migrations validation successful ✨
+======================================================================================== End of Pylembic migrations validation summary =========================================================================================
+====================================================================================================== 1 passed in 0.17s =======================================================================================================
+
 ```
 
 The plugin will automatically validate your migrations and report any issues.
@@ -87,7 +125,7 @@ This plugin leverages the `pylembic` library to perform validation on your Pylem
 ## 📋 Requirements
 
 - Python 3.11+
-- pylembic
+- [Pylembic](https://pypi.org/project/pylembic/)
 
 ## 🪪 License
 
@@ -99,4 +137,4 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## 📧 Contact
 
-(c) 2025, Created with ❤️ by [Marco Espinosa](mailto:marco@marcoespinosa.com)
+(c) 2025-2026, Created with ❤️ by [Marco Espinosa](mailto:marco@marcoespinosa.com)
