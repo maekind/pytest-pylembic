@@ -7,7 +7,7 @@ jobs:
   testing:
     strategy:
       matrix:
-        python-version: ["3.11", "3.12", "3.13"]
+        python-version: ["3.11", "3.12", "3.13", "3.14"]
     name: Python Testing and Coverage
     runs-on: ubuntu-latest
     steps:
