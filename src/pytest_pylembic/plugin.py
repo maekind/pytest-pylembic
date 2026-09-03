@@ -6,7 +6,7 @@ import os
 from pathlib import Path
 
 from _pytest.terminal import TerminalReporter
-from pytest import Config, Function, Parser, mark
+from pytest import Config, Function, Module, Parser, Session, mark
 from pylembic.validator import Validator
 
 
@@ -43,7 +43,9 @@ def pytest_configure(config: Config) -> None:
     )
 
 
-def pytest_collection_modifyitems(config: Config, items: list[Function]) -> None:
+def pytest_collection_modifyitems(
+    session: Session, config: Config, items: list[Function]
+) -> None:
     """Add pylembic tests to the test collection."""
     # Skip if explicitly disabled
     if config.getoption("--skip-pylembic"):
@@ -71,14 +73,25 @@ def pytest_collection_modifyitems(config: Config, items: list[Function]) -> None
             verbose=verbose, detect_branches=detect_branches
         )
 
-    # Add the test to the collection
+    # Add the test to the collection. When no other tests were collected
+    # there is no sibling item to borrow a parent from, so fall back to a
+    # synthetic module. A bare Session as parent would also work but
+    # pytest's getmodpath() only stops walking up the tree at a Module
+    # ancestor, so without one the computed node name gains a stray
+    # leading dot (".test_pylembic_migrations"), which breaks the
+    # head_line match in pytest_terminal_summary below.
+    if items:
+        parent = items[0].parent
+    else:
+        parent = Module.from_parent(session, path=Path(__file__))
+
     test_item = Function.from_parent(
         name="test_pylembic_migrations",
-        parent=items[0].parent if items else None,
+        parent=parent,
         callobj=test_pylembic_migrations,
     )
 
-    if test_item and items:
+    if test_item:
         items.insert(0, test_item)
 
 

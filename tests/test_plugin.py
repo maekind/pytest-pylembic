@@ -202,6 +202,36 @@ def test_failing_migration_multiple_heads(
     )
 
 
+def test_migration_validation__no_other_tests(
+    testdir: Testdir, mock_migrations_dir: Path
+):
+    """Test that the plugin works when no other tests are collected.
+
+    Regression test: with an empty test suite, `items` was empty during
+    `pytest_collection_modifyitems`, causing the plugin to build the
+    synthetic test with `parent=None`, which raised
+    `TypeError: config or parent must be provided` (surfaced as an
+    INTERNALERROR) instead of running the pylembic validation.
+    """
+    # No pyfile created here on purpose: the project under test has no
+    # tests of its own, only the plugin's auto-generated one.
+    migrations_path = Path(mock_migrations_dir) / "migrations"
+
+    result = testdir.runpytest(
+        f"--alembic-migrations-dir={migrations_path}", "--pylembic-verbose"
+    )
+
+    result.stdout.fnmatch_lines(
+        [
+            "*collected 0 items*",
+            "*=== Pylembic migrations validation summary ===*",
+            "*✨ Migrations validation successful ✨*",
+            "*1 passed*",
+        ]
+    )
+    assert result.ret == 0
+
+
 def test_skip_validation(testdir: Testdir, mock_migrations_dir: Path):
     """Test that the plugin skips validation when requested."""
     # Create a temporary pytest test file
